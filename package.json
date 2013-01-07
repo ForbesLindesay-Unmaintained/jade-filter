@@ -1,6 +1,6 @@
 {
   "name": "jade-filter",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Filter mixin for jade using transformers",
   "main": "index.js",
   "scripts": {
