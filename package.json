@@ -1,0 +1,17 @@
+{
+  "name": "jade-filter",
+  "version": "0.0.0",
+  "description": "Filter mixin for jade using transformers",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ForbesLindesay/jade-filter.git"
+  },
+  "author": "",
+  "license": "MIT",
+  "readmeFilename": "README.md",
+  "gitHead": "5f9d0adf7313026cddfc39c301fe00992d74b06a"
+}

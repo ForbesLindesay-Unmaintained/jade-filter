@@ -1,0 +1,126 @@
++filter('markdown').
+  ## Introduction
+
+    Hoare logic provides a means for prooving program's are correct.
+
+  ### Partial correctness
+
+    Hoare uses the following notation:
+
+      ${P}C{Q}$
+
+    - $C$ is a program from the programming language whos programmes being specified
+    - $P$ and $Q$ are conditions on the program variables in $C$ and are written inmathematical notation.
+
+  ${P}C{Q}$ is true if whenever $C$ is executed in a state satisfying $P$ and $C$ terminates, $Q$ is true after $C$'s execution.
+
+  ### Total correctness
+
+    Total correctness is the same as above except that it also asserts that if $C$ is executed in a state satisfying $P$ it terminates.
+  
+      $text{Total correctness} = text{Termination} + text{Partial correctness}$
+
+  There is no standard notation for total correctness, but for the purposes of this course we will use square brackets:
+
+      $[P]C[Q]$
+
+  ## Axioms and rules of Hoare logic
+
+  Hoare logic axions are specified as _schemas_ which are _instantiated_ to get particular partial correctness specifications.  They will be specified with notation of the form:
+
+      $(|-- S_1, ... , |-- S_n)/(|-- S)$
+
+  ### The assignment axiom
+
+    Given a variable $V$, an expression $E$, a statement $P$
+
+      $|-- {P[E//V]} V:= E {P}$
+
+    Where $P[E//V]$ denotes the result of substituting $E$ for all cocurences of $V$ in $P$.
+
+    e.g.
+
+    1. $|-- {Y = 2} X := 2 {Y = X}$
+    2. $|-- {X + 1 = n + 1} X := X + 1 {X = n + 1}$
+    3. $|-- {E = E} X := E {X=E}(text{if X does not occur in }E)$
+
+  The assignment axiom depends on the fact that in our toy language $E$ can't have side effects.
+
+  **N.B.** The intuition of working forwards turns out to be eronious for the assignment axiom, both $|-- {P} V:= E {P[E//V]}$ and $|-- {P} V:= E {P[V//E]}$ are un-sound.
+
+  #### Floyd assignment axiom
+
+    There is a forwards version of the asignment axiom.  It is as folows:
+
+      $|-- {P} V := E {EE v. (V = E[v//V]) ^^^ P[v//V]}$
+
+    where $v$ is a new variable (i.e. doesn't equal $V$ or occur in $P$ or $E$)
+
+    It can be applied like:
+
+      $|-- {X=1} X := X + 1 {EEv. X = X+1[v//X] ^^^ X=1[v//X]}$
+
+    Simplifying the postcondition can give us:
+
+    1. $|-- {X=1} X := X + 1 {EEv. X = v+1 ^^^ v=1}$
+    2. $|-- {X=1} X := X + 1 {EEv. X = 1+1 ^^^ v=1}$
+    3. $|-- {X=1} X := X + 1 {X = 1+1 ^^^ EEv. v=1}$
+    4. $|-- {X=1} X := X + 1 {X = 2 ^^^ T}$
+    5. $|-- {X=1} X := X + 1 {X = 2}$
+
+  ### Precondition strengthening
+
+    You can arbitarily strengthen the precondition at any time:
+
+      $(|-- P => P', |-- {P'} C {Q})/(|-- {P} C {Q})$
+
+    **Example:**
+
+    From the assignment axiom and the arithmetic fact $|-- X=n => X+1=N+1$ it follows using precondition strengthening that:
+
+      $|-- {X=n} X := X + 1 {X = n + 1}$
+
+  ### Postcondition weakening
+
+    You can arbitarily weaken the postcondition at any time:
+
+      $(|-- {P} C {Q'}, |-- Q' => Q)/(|-- {P} C {Q})$
+
+  ### Spec Conjucntion and disjunction
+
+  #### Conjunction
+
+      $(|-- {P_1} C {Q_1}, |-- {P_2} C {Q_2})/(|-- {P_1 ^^^ P_2} C {Q_1 ^^^ Q_2})$
+
+  #### Disjunction
+
+      $(|-- {P_1} C {Q_1}, |-- {P_2} C {Q_2})/(|-- {P_1 vvv P_2} C {Q_1 vvv Q_2})$
+
+  ### Sequencing rule
+
+      $(|-- {P} C_1 {Q}, |-- {Q} C_2 {R})/(|-- {P} C_1;C_2 {R})$
+
+  #### Derived sequencing rule
+
+    From precondition strengthening/postcondition weakening (the consequence rules) and sequencing, you can derive a new rule:
+
+      ${:( , |-- P => P_1),(|-- {P_1} C_1 {Q_1}, |-- Q_1 => P_2),(|-- {P_2} C_2 {Q_2}, |-- Q_2 => P_3),(.,.),(.,.),(|-- {P_n} C_n {Q_n}, |-- Q_n => Q):}/(|-- {P} C_1;...C_n {Q})$
+
+    This derived rule often lets you write more consise proofs.
+
+  ### Conditional rule
+
+      $(|-- {P ^^^ S} C_1 {Q},   |-- {P ^^^ ¬S} C_2 {Q})/(|-- {P} text{IF } S text{ THEN } C_1 text{ ELSE } C_2 {Q})$
+
+  ### While rule
+
+    The while rule encodes two key peices of information:
+
+    1. When the while loop terminates, the condition will be aflse
+    2. If something is an invariant of the body when the condition is true, it is an invariant of the while statement.
+
+  ```
+  $(|-- {P ^^^ S} C {P})/(|-- {P} text{WHILE } S text{ DO } C {P ^^^ ¬S})$
+  ```
+
+  With the exception of the while rule, all axioms so far are true of _total correctness_ as well as _partial correctness_.  A simple proof can be constructed of a while loop that satisfies the axiom but doesn't terminate.
