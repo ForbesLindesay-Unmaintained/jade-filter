@@ -1,6 +1,6 @@
 {
   "name": "jade-filter",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Filter mixin for jade using transformers",
   "main": "index.js",
   "scripts": {
@@ -13,5 +13,8 @@
   "author": "",
   "license": "MIT",
   "readmeFilename": "README.md",
-  "gitHead": "5f9d0adf7313026cddfc39c301fe00992d74b06a"
+  "gitHead": "5f9d0adf7313026cddfc39c301fe00992d74b06a",
+  "dependencies": {
+    "transformers": "~1.0.0"
+  }
 }
