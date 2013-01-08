@@ -50,20 +50,24 @@ Compiler.prototype.compile = function(){
 function filter() {
   var nested = 0;
   return function (type, options) {
-    if (0 === nested++)
-      if (locals.transformers[type].outputFormat === 'css')
-        buf.push('<style>')
-      else if (locals.transformers[type].outputFormat === 'js')
+    if (0 === nested++) {
+      if (helpers.transformers[type].outputFormat === 'css') {
+        buf.push('<style type="text/css">')
+      } else if (helpers.transformers[type].outputFormat === 'js') {
         buf.push('<script>')
-    var oldBuf = buf; buf = [];
+      }
+    }
+    var oldBuf = buf, oldIndent = __indent; buf = [];__indent = [];
     this.block()
-    oldBuf.push(locals.transformers[type].renderSync(buf.join(''), options || this.attributes));
-    buf = oldBuf;
-    if (0 === --nested)
-      if (locals.transformers[type].outputFormat === 'css')
+    oldBuf.push(helpers.transformers[type].renderSync(buf.join(''), options || this.attributes));
+    buf = oldBuf; __indent = oldIndent;
+    if (0 === --nested) {
+      if (helpers.transformers[type].outputFormat === 'css') {
         buf.push('</style>')
-      else if (locals.transformers[type].outputFormat === 'js')
+      } else if (helpers.transformers[type].outputFormat === 'js') {
         buf.push('</script>')
+      }
+    }
   }
 }
 
@@ -73,3 +77,6 @@ module.exports = function (obj) {
   obj.transformers = transformers;
   return obj;
 };
+
+module.exports.include = ('-var filter_mixin = (' + filter.toString() + '())').replace(/\n/g,'');
+module.exports.helpers = { transformers: transformers; };
