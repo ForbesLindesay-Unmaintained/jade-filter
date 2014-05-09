@@ -79,4 +79,4 @@ module.exports = function (obj) {
 };
 
 module.exports.include = ('-var filter_mixin = (' + filter.toString() + '())').replace(/\n/g,'');
-module.exports.helpers = { transformers: transformers; };
+module.exports.helpers = { transformers: transformers };
