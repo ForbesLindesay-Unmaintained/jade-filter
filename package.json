@@ -15,7 +15,7 @@
   "readmeFilename": "README.md",
   "gitHead": "5f9d0adf7313026cddfc39c301fe00992d74b06a",
   "dependencies": {
-    "transformers": "~1.0.0"
+    "transformers": "~3.1.0"
   },
   "jade": {
     "filters": "./include.jade"
