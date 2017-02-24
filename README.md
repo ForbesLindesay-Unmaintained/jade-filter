@@ -1,6 +1,8 @@
 jade-filter
 ===========
 
+[![Greenkeeper badge](https://badges.greenkeeper.io/ForbesLindesay/jade-filter.svg)](https://greenkeeper.io/)
+
 Filter mixin for jade using transformers
 
 This module over-rides the compiler for jade so that you get completely re-vamped filter support built on top of mixins.  You can use any of the filters in [transformers](https://github.com/ForbesLindesay/transformers).  Note that to use any of these transformations you must also have the corresponding library installed.
